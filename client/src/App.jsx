@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Gameboard from './Gameboard.jsx';
 const io = require('socket.io-client')
 const socket = io.connect('http://localhost:3001')
 
@@ -17,7 +18,11 @@ class App extends Component {
   }
 
   render() {
-    return ( <div> Hi </div>)
+    return (
+      <div> Hi
+      <Gameboard socket={this.state.socket}/>
+      </div>
+    )
   }
 }
 
