@@ -2,6 +2,19 @@ body {
   background-color: yellow;
 }
 
-.grid {
-  display: inline-block;
+.board {
+  display: flex;
+  justify-content: space-between;
+}
+
+.player-one {
+  border: solid black 2px;
+}
+
+.player-two {
+  border: solid blue 2px;
+}
+
+.cell {
+  width: 10%;
 }
