@@ -5,14 +5,17 @@ body {
 .board {
   display: flex;
   justify-content: space-between;
+  padding: 10% 10%;
 }
 
 .player-one {
   border: solid black 2px;
+  margin-right: 2%;
 }
 
 .player-two {
   border: solid blue 2px;
+  margin-left: 2%;
 }
 
 .cell {
