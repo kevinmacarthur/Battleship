@@ -19,7 +19,7 @@ class App extends Component {
 
   render() {
     return (
-      <div> Hi
+      <div>
       <Gameboard socket={this.state.socket}/>
       </div>
     )
