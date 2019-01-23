@@ -12,23 +12,24 @@ class Gamespace extends Component {
     this.handleClick= this.handleClick.bind(this)
   }
 
-  ComponentDidMount() {
-
+  componentDidUpdate(prevProps) {
+    if (this.props.hasShip ==! prevProps.hasShip) {
+      this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'red'}})
+    }
   }
 
   handleClick(e) {
-    let coordinates = []
+    // let coordinates = []
     if(this.props.placingShip) {
-      // console.log('Placing ship', this.props.placingShip)
       this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value)
+    } else if (this.props.hasShip) {
+      console.log("THIS SQUARE HAS A SHIP IN IT")
     } else {
-      console.log("clicked", e.target.attributes.coordinate.value, 'belonging to', e.target.attributes.player.value)
+      // console.log("clicked", e.target.attributes.coordinate.value, 'belonging to', e.target.attributes.player.value)
       this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'red'}}, () => {
         this.props.socket.emit('miss', JSON.stringify(this.state))
       })
-  }
-
-    //MAYBE DEAL WITH THIS ON THE SERVER AS WELL AS SEND BOARD GAME FROM SERVER FOR CONSISTENCY
+    }
   }
 
   render() {

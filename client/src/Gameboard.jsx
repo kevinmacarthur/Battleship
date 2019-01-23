@@ -35,14 +35,35 @@ class Gameboard extends Component {
 
 
   renderBoard(player, ships) {
-    // console.log("SHIPS IN RENDER BOARD", ships)
-    //ADD AN UPDATE COORDINATE AFTER TO LOOP THROUGH SHIP VALUES AND FOR EACH COORD SET STATE OF THAT COORD TO "SHIP FOR CONDITIONAL RENDER"
     let board = Object.keys(this.state.coordinates).map(coord => {
-      return (
-        <Gamespace coordinate={coord} player={player} socket={this.props.socket} placingShip={this.state.placingShip} attemptPlacement={this.attemptPlacement}/>
+        let squareHasShip = false
+        for (let ship in ships) {
+            if (ships[ship]) {
+                for (let i =0; i < ships[ship].length; i ++) {
+                    if (ships[ship][i] === coord) {
+                      squareHasShip = true
+                    }
+                }
+            }
+        }
+      if (squareHasShip) {
+        return (
+            <Gamespace coordinate={coord} player={player} socket={this.props.socket} placingShip={this.state.placingShip} attemptPlacement={this.attemptPlacement} hasShip={true}/>
+        )
+      } else {
+        return (
+        <Gamespace coordinate={coord} player={player} socket={this.props.socket} placingShip={this.state.placingShip} attemptPlacement={this.attemptPlacement} hasShip={false}/>
       )
+      }
     })
     return (board)
+    //THIS IS NORMAL VERSION THAT WORKS BELOW
+    // let board = Object.keys(this.state.coordinates).map(coord => {
+    //   return (
+    //     <Gamespace coordinate={coord} player={player} socket={this.props.socket} placingShip={this.state.placingShip} attemptPlacement={this.attemptPlacement} ship={false}/>
+    //   )
+    // })
+    // return (board)
   }
 
    placingShip(ship, spaces) {
@@ -76,8 +97,8 @@ class Gameboard extends Component {
         )
     } else {
         console.log("COULD NOT PLACE SHIP")
-        this.setState({placingShip: false})
     }
+    this.setState({placingShip: false})
   }
 
   alreadyTaken(coord) {
@@ -110,8 +131,6 @@ class Gameboard extends Component {
     let sameRow = firstCoord.charCodeAt(0) - lastCoord.charCodeAt(0)
     let sameCol = firstCoord.slice(1) - lastCoord.slice(1)
 
-    console.log("SAME ROW IF 0", sameRow)
-    console.log("SAME COL IF 0", sameCol)
     if (sameRow !==0 && sameCol !==0) {
         valid = false
         return
@@ -127,7 +146,7 @@ class Gameboard extends Component {
                 //IF IT IS CHECK TO SEE IF THE NUMBER IS ONE BESIDE THE PREVIOUS NUMBER
                 if (cNumber - pNumber !==1 && cNumber - pNumber !==-1) {
                     //IF IT ISNT 1 or -1 it means the number is not beside previous
-                    console.log("BROKE THE ROW")
+                    // console.log("BROKE THE ROW")
                     valid = false
                     return
                 }
@@ -141,7 +160,7 @@ class Gameboard extends Component {
                 }
                 //IF LETTER IS BESIDE THEN CHECK IF THE NUMBER IS THE SAME ELSE ITS FALSE
                 if (cNumber - pNumber !==0) {
-                    console.log("NUMBER NOT THE SAME ")
+                    // console.log("NUMBER NOT THE SAME ")
                     valid = false
                     return
                 }
