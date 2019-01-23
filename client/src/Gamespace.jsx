@@ -19,7 +19,7 @@ class Gamespace extends Component {
   handleClick(e) {
     let coordinates = []
     if(this.props.placingShip) {
-      console.log('Placing ship', this.props.placingShip)
+      // console.log('Placing ship', this.props.placingShip)
       this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value)
     } else {
       console.log("clicked", e.target.attributes.coordinate.value, 'belonging to', e.target.attributes.player.value)
