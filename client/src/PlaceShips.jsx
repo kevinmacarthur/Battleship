@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-function PlaceShips ({placingShip}) {
+function PlaceShips ({placingShip, readyToStart}) {
 
   return (
     <div className='PlaceShips'>
@@ -8,7 +8,7 @@ function PlaceShips ({placingShip}) {
     <button onClick={() => placingShip('Destroyer', 4)}> Place Destroyer 4 </button>
     <button onClick={() => placingShip('Submarine', 3)}> Place Submarine 3 </button>
     <button onClick={() => placingShip('Sneakyboat', 2)}> Place Sneakyboat 2 </button>
-    <button onClick={() => placingShip(2)}> READY </button>
+    <button onClick={() => readyToStart('test')}> READY </button>
     </div>
     )
 }

@@ -13,13 +13,17 @@ class Gamespace extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.hasShip ==! prevProps.hasShip) {
-      this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'red'}})
+    if (this.props.hasShip === true && prevProps.hasShip === false) {
+      this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'green'}})
+    }
+    if (this.props.hasShip === false && prevProps.hasShip === true) {
+      this.setState({coordinate: this.state.coordinate, status:this.props.coordinate, style:{}})
     }
   }
 
   handleClick(e) {
     // let coordinates = []
+    console.log(this.props)
     if(this.props.placingShip) {
       this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value)
     } else if (this.props.hasShip) {

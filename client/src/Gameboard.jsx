@@ -27,6 +27,7 @@ class Gameboard extends Component {
     this.renderBoard = this.renderBoard.bind(this)
     this.attemptPlacement = this.attemptPlacement.bind(this)
     this.placingShip = this.placingShip.bind(this)
+    this.readyToStart = this.readyToStart.bind(this)
   }
 
   componentDidMount() {
@@ -57,13 +58,6 @@ class Gameboard extends Component {
       }
     })
     return (board)
-    //THIS IS NORMAL VERSION THAT WORKS BELOW
-    // let board = Object.keys(this.state.coordinates).map(coord => {
-    //   return (
-    //     <Gamespace coordinate={coord} player={player} socket={this.props.socket} placingShip={this.state.placingShip} attemptPlacement={this.attemptPlacement} ship={false}/>
-    //   )
-    // })
-    // return (board)
   }
 
    placingShip(ship, spaces) {
@@ -75,12 +69,13 @@ class Gameboard extends Component {
   }
 
   placeShip(ship, coordinates) {
+    //ONLY SETTING PLAYER ONE SHIPS FOR NOW WILL ADD OTHER PARAMETER LATER
     if (ship === 'Battleship' && this.checkCoordinates(coordinates)) {
         this.setState({playerOneShips:{Battleship:coordinates, Destroyer:this.state.playerOneShips.Destroyer, Submarine:this.state.playerOneShips.Submarine, Sneakyboat:this.state.playerOneShips.Sneakyboat}}, () => {
             console.log("PLACED " , ship , this.state.playerOneShips)
             }
         )
-    }else if (ship === 'Destroyer' && this.checkCoordinates(coordinates)) {
+    } else if (ship === 'Destroyer' && this.checkCoordinates(coordinates)) {
         this.setState({playerOneShips:{Battleship:this.state.playerOneShips.Battleship, Destroyer: coordinates, Submarine:this.state.playerOneShips.Submarine, Sneakyboat:this.state.playerOneShips.Sneakyboat}}, () => {
             console.log("PLACED " , ship , this.state.playerOneShips)
             }
@@ -186,6 +181,14 @@ class Gameboard extends Component {
     }
   }
 
+  readyToStart(player){
+    if (this.state.playerOneShips.Battleship && this.state.playerOneShips.Destroyer && this.state.playerOneShips.Submarine && this.state.playerOneShips.Sneakyboat) {
+        console.log(`${player} is ready to start`)
+    } else {
+        console.log("PLAYER ONE SHIPS ARE NOT ALL PLACED")
+    }
+  }
+
   render() {
     if (!this.state.started) {
         return(
@@ -198,7 +201,7 @@ class Gameboard extends Component {
                     {this.renderBoard('player-two', this.state.playerTwoShips)}
                 </div>
               </div>
-              <PlaceShips board={this.state.coordinates} placingShip={this.placingShip}/>
+              <PlaceShips board={this.state.coordinates} placingShip={this.placingShip} readyToStart={this.readyToStart}/>
             </div>
         )
     } else {
@@ -206,10 +209,10 @@ class Gameboard extends Component {
             <div className='game'>
               <div className='board'>
                 <div className ="player-one">
-                    {this.renderBoard('player-one')}
+                    {this.renderBoard('player-one', this.state.playerOneShips)}
                 </div>
                 <div className ="player-two">
-                    {this.renderBoard('player-two')}
+                    {this.renderBoard('player-two', this.state.playerTwoShips)}
                 </div>
             </div>
           </div>
