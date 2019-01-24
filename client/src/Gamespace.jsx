@@ -25,7 +25,7 @@ class Gamespace extends Component {
     // let coordinates = []
     console.log(this.props)
     if(this.props.placingShip) {
-      this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value)
+      this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value, e.target.attributes.player.value)
     } else if (this.props.hasShip) {
       console.log("THIS SQUARE HAS A SHIP IN IT")
     } else {

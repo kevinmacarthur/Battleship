@@ -12,17 +12,18 @@ class Gameboard extends Component {
       coordinates: coordinates,
       started: false,
       placingShip: false,
-      playerOneShips: {'Battleship': '',
+      playerOne:{ships: {'Battleship': '',
                         'Destroyer': '',
                         'Submarine': '',
                         'Sneakyboat': ''
       },
-      playerTwoShips: {'Battleship': '',
+      tempCoords: []},
+      playerTwo:{ships: {'Battleship': '',
                         'Destroyer': '',
                         'Submarine': '',
                         'Sneakyboat': ''
       },
-      tempCoords: []
+      tempCoords: []}
     }
     this.renderBoard = this.renderBoard.bind(this)
     this.attemptPlacement = this.attemptPlacement.bind(this)
@@ -68,26 +69,25 @@ class Gameboard extends Component {
     this.setState({placingShip: Battleship}, () => {console.log("STATE NOW", this.state)})
   }
 
-  placeShip(ship, coordinates) {
-    //ONLY SETTING PLAYER ONE SHIPS FOR NOW WILL ADD OTHER PARAMETER LATER
+  placeShip(ship, coordinates, player) {
     if (ship === 'Battleship' && this.checkCoordinates(coordinates)) {
-        this.setState({playerOneShips:{Battleship:coordinates, Destroyer:this.state.playerOneShips.Destroyer, Submarine:this.state.playerOneShips.Submarine, Sneakyboat:this.state.playerOneShips.Sneakyboat}}, () => {
-            console.log("PLACED " , ship , this.state.playerOneShips)
+        this.setState({[player]:{ships:{Battleship:coordinates, Destroyer:this.state[player].ships.Destroyer, Submarine:this.state[player].ships.Submarine, Sneakyboat:this.state[player].ships.Sneakyboat}, tempCoords:[]}}, () => {
+            console.log("PLACED " , ship , this.state[player])
             }
         )
     } else if (ship === 'Destroyer' && this.checkCoordinates(coordinates)) {
-        this.setState({playerOneShips:{Battleship:this.state.playerOneShips.Battleship, Destroyer: coordinates, Submarine:this.state.playerOneShips.Submarine, Sneakyboat:this.state.playerOneShips.Sneakyboat}}, () => {
-            console.log("PLACED " , ship , this.state.playerOneShips)
+        this.setState({[player]:{ships:{Battleship:this.state[player].ships.Battleship, Destroyer:coordinates, Submarine:this.state[player].ships.Submarine, Sneakyboat:this.state[player].ships.Sneakyboat}, tempCoords:[]}}, () => {
+            console.log("PLACED " , ship , this.state[player])
             }
         )
     } else if (ship === 'Submarine' && this.checkCoordinates(coordinates)) {
-        this.setState({playerOneShips:{Battleship:this.state.playerOneShips.Battleship, Destroyer: this.state.playerOneShips.Destroyer, Submarine:coordinates, Sneakyboat:this.state.playerOneShips.Sneakyboat}}, () => {
-            console.log("PLACED " , ship , this.state.playerOneShips)
+        this.setState({[player]:{ships:{Battleship:this.state[player].ships.Battleship, Destroyer:this.state[player].ships.Destroyer, Submarine:coordinates, Sneakyboat:this.state[player].ships.Sneakyboat}, tempCoords:[]}}, () => {
+            console.log("PLACED " , ship , this.state[player])
             }
         )
     } else if (ship === 'Sneakyboat' && this.checkCoordinates(coordinates)) {
-        this.setState({playerOneShips:{Battleship:this.state.playerOneShips.Battleship, Destroyer: this.state.playerOneShips.Destroyer, Submarine:this.state.playerOneShips.Submarine, Sneakyboat:coordinates}}, () => {
-            console.log("PLACED " , ship , this.state.playerOneShips)
+        this.setState({[player]:{ships:{Battleship:this.state[player].ships.Battleship, Destroyer:this.state[player].ships.Destroyer, Submarine:this.state[player].ships.Submarine, Sneakyboat:coordinates},tempCoords:[]}}, () => {
+            console.log("PLACED " , ship , this.state[player])
             }
         )
     } else {
@@ -96,20 +96,20 @@ class Gameboard extends Component {
     this.setState({placingShip: false})
   }
 
-  alreadyTaken(coord) {
+  notAlreadyTaken(coord, player) {
     let isAllowed = true
-    for (let key in this.state.playerOneShips) {
-        if(this.state.playerOneShips[key]) {
-            for (let i = 0; i < this.state.playerOneShips[key].length; i++) {
-                let value = this.state.playerOneShips[key][i]
+    for (let key in this.state[player].ships) {
+        if(this.state[player].ships[key]) {
+            for (let i = 0; i < this.state[player].ships[key].length; i++) {
+                let value = this.state[player].ships[key][i]
                 if (value === coord) {
                     isAllowed = false
                 }
             }
         }
     }
-    for (let i = 0; i < this.state.tempCoords.length; i++) {
-        if (this.state.tempCoords[i] === coord) {
+    for (let i = 0; i < this.state[player].tempCoords.length; i++) {
+        if (this.state[player].tempCoords[i] === coord) {
             isAllowed = false
         }
     }
@@ -166,15 +166,16 @@ class Gameboard extends Component {
     return valid
   }
 
-  attemptPlacement (ship, coordinate) {
-    if (this.alreadyTaken(coordinate)) {
-        this.state.tempCoords.push(coordinate)
-        if (ship.spaces === this.state.tempCoords.length) {
-            // console.log("READY TO PLACE ", ship.name, "at coords", this.state.tempCoords)
-            this.placeShip(ship.name, this.state.tempCoords)
-            this.setState({tempCoords: []}, () => {
-                // console.log("coords NOW", this.state.tempCoords)
-            })
+  attemptPlacement (ship, coordinate, player) {
+    if (this.notAlreadyTaken(coordinate, player)) {
+        console.log("ATTEMPT PLACEMENT", this.state[player])
+        this.state[player].tempCoords.push(coordinate)
+        if (ship.spaces === this.state[player].tempCoords.length) {
+            console.log("READY TO PLACE ", ship.name, "at coords", this.state[player].tempCoords, 'for', player)
+            this.placeShip(ship.name, this.state[player].tempCoords, player)
+            // this.setState({[player]:{ships:{Battleship:this.state[player].ships.Battleship, Destroyer:this.state[player].ships.Destroyer, Submarine:this.state[player].ships.Submarine, Sneakyboat:this.state[player].ships.Sneakyboat}}, tempCoords:[]}, () => {
+            //     console.log("coords NOW", this.state)
+            // })
         }
     } else {
         console.log("SORRY THIS COORDINATE IS ALREADY TAKEN BY ANOTHER SHIP")
@@ -182,10 +183,10 @@ class Gameboard extends Component {
   }
 
   readyToStart(player){
-    if (this.state.playerOneShips.Battleship && this.state.playerOneShips.Destroyer && this.state.playerOneShips.Submarine && this.state.playerOneShips.Sneakyboat) {
+    if (this.state[player].ships.Battleship && this.state[player].ships.Destroyer && this.state[player].ships.Submarine && this.state[player].ships.Sneakyboat) {
         console.log(`${player} is ready to start`)
     } else {
-        console.log("PLAYER ONE SHIPS ARE NOT ALL PLACED")
+        console.log(`${player} hasn't placed all their ships yet`)
     }
   }
 
@@ -195,13 +196,15 @@ class Gameboard extends Component {
             <div className='game'>
               <div className='board'>
                 <div className ="player-one">
-                    {this.renderBoard('player-one', this.state.playerOneShips)}
+                    {this.renderBoard('playerOne', this.state.playerOne.ships)}
+                    <button onClick={() => this.readyToStart('playerOne')}> READY </button>
                 </div>
                 <div className ="player-two">
-                    {this.renderBoard('player-two', this.state.playerTwoShips)}
+                    {this.renderBoard('playerTwo', this.state.playerTwo.ships)}
+                    <button onClick={() => this.readyToStart('playerTwo')}> READY </button>
                 </div>
               </div>
-              <PlaceShips board={this.state.coordinates} placingShip={this.placingShip} readyToStart={this.readyToStart}/>
+              <PlaceShips board={this.state.coordinates} placingShip={this.placingShip}/>
             </div>
         )
     } else {
@@ -209,10 +212,10 @@ class Gameboard extends Component {
             <div className='game'>
               <div className='board'>
                 <div className ="player-one">
-                    {this.renderBoard('player-one', this.state.playerOneShips)}
+                    {this.renderBoard('playerOne', this.state.playerOne.ships)}
                 </div>
                 <div className ="player-two">
-                    {this.renderBoard('player-two', this.state.playerTwoShips)}
+                    {this.renderBoard('playerTwo', this.state.playerTwo.ships)}
                 </div>
             </div>
           </div>
