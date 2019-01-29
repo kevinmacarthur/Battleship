@@ -188,11 +188,15 @@ class Gameboard extends Component {
 
   readyToStart(player){
     if (this.state[player].ships.Battleship && this.state[player].ships.Destroyer && this.state[player].ships.Submarine && this.state[player].ships.Sneakyboat) {
-        const newObj = update(this.state[player], {ready:{$set: this.state[player].ready=true}})
-        this.setState({[player]:newObj})
-        console.log("STATE IS", this.state)
+      const newObj = update(this.state[player], {ready:{$set: this.state[player].ready=true}})
+      this.setState({[player]:newObj})
+      console.log("STATE IS", this.state)
     } else {
-        alert(`${player} hasn't placed all their ships yet`)
+      alert(`${player} hasn't placed all their ships yet`)
+    }
+
+    if (this.state.playerOne.ready && this.state.playerTwo.ready) {
+      this.setState({started:true})
     }
   }
 
