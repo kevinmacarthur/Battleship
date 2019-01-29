@@ -29,6 +29,7 @@ class Gameboard extends Component {
     this.attemptPlacement = this.attemptPlacement.bind(this)
     this.placingShip = this.placingShip.bind(this)
     this.readyToStart = this.readyToStart.bind(this)
+    this.clearTemp = this.clearTemp.bind(this)
   }
 
   componentDidMount() {
@@ -190,6 +191,11 @@ class Gameboard extends Component {
     }
   }
 
+  clearTemp(player){
+    this.setState({[player]:{ships:{Battleship:this.state[player].ships.Battleship, Destroyer:this.state[player].ships.Destroyer, Submarine:this.state[player].ships.Submarine, Sneakyboat:this.state[player].ships.Sneakyboat},tempCoords:[]}}, () =>
+      console.log("CLEARED TEMP COORDINATE"))
+  }
+
   render() {
     if (!this.state.started) {
         return(
@@ -198,10 +204,12 @@ class Gameboard extends Component {
                 <div className ="player-one">
                     {this.renderBoard('playerOne', this.state.playerOne.ships)}
                     <button onClick={() => this.readyToStart('playerOne')}> READY </button>
+                    <button onClick={() => this.clearTemp('playerOne')}> Clear </button>
                 </div>
                 <div className ="player-two">
                     {this.renderBoard('playerTwo', this.state.playerTwo.ships)}
                     <button onClick={() => this.readyToStart('playerTwo')}> READY </button>
+                    <button onClick={() => this.clearTemp('playerTwo')}> Clear </button>
                 </div>
               </div>
               <PlaceShips board={this.state.coordinates} placingShip={this.placingShip}/>
