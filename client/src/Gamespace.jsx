@@ -27,12 +27,15 @@ class Gamespace extends Component {
     if(this.props.placingShip) {
       this.props.attemptPlacement(this.props.placingShip, e.target.attributes.coordinate.value, e.target.attributes.player.value)
     } else if (this.props.hasShip) {
-      console.log("THIS SQUARE HAS A SHIP IN IT")
+      alert("hit")
+      this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'green'}})
+      console.log("THIS SQUARE HAS A SHIP IN IT DEAL WITH WHAT TO DO ON A HIT back end and stuff")
     } else {
       // console.log("clicked", e.target.attributes.coordinate.value, 'belonging to', e.target.attributes.player.value)
       this.setState({coordinate: this.state.coordinate, status:"X", style:{backgroundColor: 'red'}}, () => {
         this.props.socket.emit('miss', JSON.stringify(this.state))
       })
+      alert("miss")
     }
   }
 
